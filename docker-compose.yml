@@ -26,7 +26,7 @@ services:
       - DOCKER_TLS_VERIFY=1
     build:
       context: . 
-    user: 'jenkins'
+    user: 'root'
     ports:
       - '8080:8080'
       - '50000:50000'
@@ -36,5 +36,7 @@ services:
       - /usr/local/bin:/usr/hostbin
       - jenkins-docker-certs:/certs/client:ro
     privileged: true
-    networks:
-      - jenkins
+    networks: 
+      jenkins:
+        aliases:
+          - jenkins
