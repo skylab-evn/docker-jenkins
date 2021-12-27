@@ -1,42 +1,22 @@
 version: '3.9'
 networks:
   jenkins:
-volumes:
-  jenkins-docker-certs:
+    driver: bridge
 services:
-  docker:
-    image: docker:dind
-    networks: 
-      jenkins:
-        aliases:
-          - docker
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
-    volumes:
-      - jenkins-docker-certs:/certs/client
-      - /jenkins_home:/var/jenkins_home
-    expose:
-      - 2376
-    privileged: true
   jenkins:
     container_name: 'jenkins-blueocean'
-    environment:
-      - DOCKER_HOST=tcp://docker:2376
-      - DOCKER_CERT_PATH=/certs/client
-      - DOCKER_TLS_VERIFY=1
     build:
-      context: . 
+      context: .
     user: 'root'
     ports:
       - '8080:8080'
       - '50000:50000'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /jenkins_home:/var/jenkins_home
+      - /var/jenkins_home:/var/jenkins_home:rw
       - /usr/local/bin:/usr/hostbin
-      - jenkins-docker-certs:/certs/client:ro
+      - /usr/local/bin/docker:/bin/docker
+      - /usr/local/bin/docker-compose:/bin/docker-compose
     privileged: true
-    networks: 
-      jenkins:
-        aliases:
-          - jenkins
+    networks:
+      - jenkins
