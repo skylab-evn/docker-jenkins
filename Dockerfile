@@ -12,3 +12,9 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 
 USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean:1.24.7 docker-workflow:1.26"
+
+RUN apt-get install -y curl \
+  && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+  && apt-get install -y nodejs \
+  && curl -L https://www.npmjs.com/install.sh | sh \
+  && npm install pm2@latest -g
